@@ -1,0 +1,9 @@
+{
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.compilerArgs": ["-pedantic", "-Wall", "-Wextra"],
+    "C_Cpp.clang_format_fallbackStyle": "{BasedOnStyle: Google, IndentWidth: 2, ColumnLimit: 0}",
+
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+}
