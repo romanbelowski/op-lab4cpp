@@ -16,8 +16,7 @@ void ArchiverLZW::compress(const char *in, const char *out) {
 
   pending_out = pending_size = 0;
   code_size = 9;
-  current_code = 256;
-  next_bump = 512;
+  code_threshold = pow(2, code_size);
 
   clog << "Compressing file " << in;
   lzw_encode(input, output);
@@ -52,7 +51,7 @@ void ArchiverLZW::lzw_encode(istream &input, ostream &output) {
         dict[next_str] = next_code++;
       }
       // Виведемо код str
-      output_code(output, dict[str]);
+      output_code(output, dict[str], next_code);
       str = string(1, character);
     }
 
@@ -62,33 +61,26 @@ void ArchiverLZW::lzw_encode(istream &input, ostream &output) {
     }
   }
   if (!str.empty()) {
-    output_code(output, dict[str]);
+    output_code(output, dict[str], next_code);
   }
-  output_code(output, EOF_CODE);
+  output_code(output, EOF_CODE, next_code);
   flush_output(output, 0);
 }
 
-void ArchiverLZW::output_code(ostream &output, int code) {
-  // Добавимо
+// Добавляє біти з code в очікування, і по можливості виводить очікування
+void ArchiverLZW::output_code(ostream &output, int code, int dict_size) {
+  // Добавимо code в очікування
   pending_out = (code << pending_size) | pending_out;
   pending_size += code_size;
 
-  if (current_code < MAX_CODE) {
-    current_code++;
-    if (current_code == next_bump) {
-      next_bump *= 2;
-      code_size++;
-    }
+  if (dict_size - 1 == code_threshold) {
+    code_threshold *= 2;
+    code_size++;
   }
   flush_output(output, 8);
-  // while (pending_size >= 8) {
-  //   out = pending_out & 0xFF;
-  //   output.write((char *)&out, 1);
-  //   pending_out >>= 8;
-  //   pending_size -= 8;
-  // }
 }
 
+// Виводить біти з очікування в потік output, якщо їх більше flush_size
 void ArchiverLZW::flush_output(ostream &output, int flush_size) {
   int out;
   while (pending_size >= flush_size) {
@@ -102,6 +94,7 @@ void ArchiverLZW::flush_output(ostream &output, int flush_size) {
   }
 }
 
-void ArchiverLZW::debug_code(ostream &output, int code) {
+// Виводить коди з таблиці в output як текст, для відладки
+void ArchiverLZW::debug_code(ostream &output, int code, int dict_size) {
   output << code << endl;
 }
