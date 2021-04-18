@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "archiver.hpp"
+#include "compressor.hpp"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ void show_help();
 int main(int argc, char *argv[]) {
   if (argc == 4) {
     if (argv[1] == string_view{"--compress"} || argv[1] == string_view{"-c"}) {
-      ArchiverLZW(12).compress(argv[2], argv[3]);
+      CompressorLZW(12).compress(argv[2], argv[3]);
     } else {
       show_help();
     }

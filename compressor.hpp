@@ -1,10 +1,11 @@
+#pragma once
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
-class ArchiverLZW {
+class CompressorLZW {
  private:
   int BITS,      // Максимальна кількість біт для запису коду
       MAX_CODE,  // Максимально можливий код в таблиці (MAX_CODE = 2^BITS - 1)
@@ -21,6 +22,6 @@ class ArchiverLZW {
   void flush_output(std::ostream &output, int flush_size);          // Виводить біти з очікування в потік output, якщо їх більше flush_size
 
  public:
-  ArchiverLZW(const int bits) : BITS(bits), MAX_CODE(pow(2, bits) - 1){};
+  CompressorLZW(const int bits) : BITS(bits), MAX_CODE(pow(2, bits) - 1){};
   void compress(const char *in, const char *out);  // Збергіає зжатий алгоритмом LZW файл in в файл out
 };

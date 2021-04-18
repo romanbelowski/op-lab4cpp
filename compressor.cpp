@@ -1,11 +1,11 @@
-#include "archiver.hpp"
+#include "compressor.hpp"
 
 #define EOF_CODE 256
 
 using namespace std;
 
 // Збергіає зжатий алгоритмом LZW файл in в файл out
-void ArchiverLZW::compress(const char *in, const char *out) {
+void CompressorLZW::compress(const char *in, const char *out) {
   ifstream input(in, ios::in | ios::binary);
   ofstream output(out, ios::out | ios::binary);
 
@@ -27,7 +27,7 @@ void ArchiverLZW::compress(const char *in, const char *out) {
 }
 
 // Записує файл з потоку input в потік output використовуючи алгоритм LZW
-void ArchiverLZW::lzw_encode(istream &input, ostream &output) {
+void CompressorLZW::lzw_encode(istream &input, ostream &output) {
   // Ініціалізуємо таблицю кодів початковим алфавітом
   unordered_map<string, int> dict;
   for (int i = 0; i < 256; i++) {
@@ -68,7 +68,7 @@ void ArchiverLZW::lzw_encode(istream &input, ostream &output) {
 }
 
 // Добавляє біти з code в очікування, і по можливості виводить очікування
-void ArchiverLZW::output_code(ostream &output, int code, int dict_size) {
+void CompressorLZW::output_code(ostream &output, int code, int dict_size) {
   // Добавимо code в очікування
   pending_out = (code << pending_size) | pending_out;
   pending_size += code_size;
@@ -81,7 +81,7 @@ void ArchiverLZW::output_code(ostream &output, int code, int dict_size) {
 }
 
 // Виводить біти з очікування в потік output, якщо їх більше flush_size
-void ArchiverLZW::flush_output(ostream &output, int flush_size) {
+void CompressorLZW::flush_output(ostream &output, int flush_size) {
   int out;
   while (pending_size >= flush_size) {
     // Запишемо молодші 8 біт
@@ -95,6 +95,6 @@ void ArchiverLZW::flush_output(ostream &output, int flush_size) {
 }
 
 // Виводить коди з таблиці в output як текст, для відладки
-void ArchiverLZW::debug_code(ostream &output, int code, int dict_size) {
+void CompressorLZW::debug_code(ostream &output, int code, int dict_size) {
   output << code << endl;
 }
