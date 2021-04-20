@@ -51,7 +51,7 @@ void CompressorLZW::lzw_encode(istream &input, ostream &output) {
         dict[next_str] = next_code++;
       }
       // Виведемо код str
-      debug_code(output, dict[str], next_code);
+      output_code(output, dict[str], next_code);
       str = string(1, character);
     }
 
@@ -61,10 +61,10 @@ void CompressorLZW::lzw_encode(istream &input, ostream &output) {
     }
   }
   if (!str.empty()) {
-    debug_code(output, dict[str], next_code);
+    output_code(output, dict[str], next_code);
   }
-  debug_code(output, EOF_CODE, next_code);
-  //flush_output(output, 0);
+  output_code(output, EOF_CODE, next_code);
+  flush_output(output, 0);
 }
 
 // Добавляє біти з code в очікування, і по можливості виводить очікування
@@ -95,6 +95,6 @@ void CompressorLZW::flush_output(ostream &output, int flush_size) {
 }
 
 // Виводить коди з таблиці в output як текст, для відладки
- void CompressorLZW::debug_code(ostream &output, int code, int dict_size) {
-   output << code << endl;
- }
+void CompressorLZW::debug_code(ostream &output, int code, int dict_size) {
+  output << code << endl;
+}
