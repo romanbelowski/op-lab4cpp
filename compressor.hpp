@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <unordered_map>  // швидше <map> у три рази
 
 class CompressorLZW {
  private:
